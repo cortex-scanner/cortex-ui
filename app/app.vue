@@ -1,8 +1,7 @@
 <template>
   <UApp>
-    <div>
-      <UButton>Click me</UButton>
-      <span class="text-xl">Hello World</span>
-    </div>
+    <NuxtLayout>
+      <NuxtPage />
+    </NuxtLayout>
   </UApp>
 </template>
