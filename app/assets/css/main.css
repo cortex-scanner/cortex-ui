@@ -1,2 +1,11 @@
 @import "tailwindcss";
 @import "@nuxt/ui";
+
+/* use cursor-pointer on all buttons */
+@layer base {
+    button,
+    [role="button"] {
+        @apply cursor-pointer;
+        @apply disabled:cursor-not-allowed;
+    }
+}

@@ -11,7 +11,8 @@ export default defineNuxtConfig({
     "@nuxt/icon",
     "@nuxt/fonts",
     "@nuxt/test-utils",
-    "@nuxt/ui"
+    "@nuxt/ui",
+    "@pinia/nuxt"
   ],
   vite: { plugins: [tailwindcss()] }
 });

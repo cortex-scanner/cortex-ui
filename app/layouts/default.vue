@@ -8,6 +8,13 @@ const menuItems = ref<NavigationMenuItem[][]>([
       icon: "i-lucide-home",
       to: "/"
     }
+  ],
+  [
+    {
+      label: "Scans",
+      icon: "i-lucide-scan-search",
+      to: "/scans"
+    }
   ]
 ]);
 </script>
@@ -17,7 +24,7 @@ const menuItems = ref<NavigationMenuItem[][]>([
       <AppHeader />
       <div class="flex">
         <UNavigationMenu orientation="vertical" :items="menuItems" />
-        <div class="p-1">
+        <div class="p-1 w-full">
           <slot />
         </div>
       </div>
