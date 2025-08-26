@@ -8,6 +8,7 @@ pageHeaderStore.pageTitle = "Scans";
 pageHeaderStore.setupActions({
   start: [
     {
+      id: "create",
       label: "Create",
       icon: Icons.ADD,
       action: () => {
