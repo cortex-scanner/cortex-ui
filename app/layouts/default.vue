@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import type { NavigationMenuItem } from "@nuxt/ui";
 
+const pageHeaderStore = usePageHeaderStore();
+
 const menuItems = ref<NavigationMenuItem[][]>([
   [
     {
@@ -24,7 +26,8 @@ const menuItems = ref<NavigationMenuItem[][]>([
       <AppHeader />
       <div class="flex">
         <UNavigationMenu orientation="vertical" :items="menuItems" />
-        <div class="p-1 w-full">
+        <div class="p-2 w-full space-y-2">
+          <PageHeader :title="pageHeaderStore.pageTitle" :actions-start="pageHeaderStore.actionsStart" :actions-end="pageHeaderStore.actionsEnd" />
           <slot />
         </div>
       </div>
