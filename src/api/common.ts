@@ -48,3 +48,10 @@ export async function parseArrayResponse<T extends object>(
   const parsed = (await r.json()) as APIReply<APIArray<T>>;
   return parsed.data.items;
 }
+
+export async function parseSingleResponse<T extends object>(
+  r: Response
+): Promise<T> {
+  const parsed = (await r.json()) as APIReply<T>;
+  return parsed.data;
+}
