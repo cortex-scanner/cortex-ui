@@ -4,7 +4,7 @@
 const config = {
   semi: true,
   singleQuote: false,
-  trailingComma: "all",
+  trailingComma: "es5",
 };
 
 export default config;
