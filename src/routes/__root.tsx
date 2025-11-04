@@ -17,8 +17,8 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
     <>
       <SidebarProvider>
         <AppSidebar />
-        <main>
-          <div className="flex p-4 flex-col h-screen w-full">
+        <main className="flex-1">
+          <div className="flex p-4 flex-col h-screen">
             <Outlet />
           </div>
         </main>
