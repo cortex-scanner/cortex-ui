@@ -1,6 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useRef } from "react";
+import { toast } from "sonner";
 import type { Asset } from "@/types/asset.ts";
 import type { ToolbarItem } from "@/components/Toolbar.tsx";
 import type {
@@ -33,6 +34,15 @@ function RouteComponent() {
     onSuccess: () => {
       query.refetch();
       assetDialogRef.current?.closeDialog();
+
+      toast.success("Asset created", {
+        description: "New asset has been created successfully.",
+      });
+    },
+    onError: (e) => {
+      toast.error("Failed to create asset", {
+        description: e.message,
+      });
     },
   });
 
@@ -40,8 +50,16 @@ function RouteComponent() {
     mutationFn: (assetId: string) => {
       return deleteAsset(assetId);
     },
-    onSuccess: () => {
+    onSuccess: (a) => {
       query.refetch();
+      toast.success("Asset deleted", {
+        description: `${a.endpoint} has been deleted successfully.`,
+      });
+    },
+    onError: (e) => {
+      toast.error("Failed to delete asset", {
+        description: e.message,
+      });
     },
   });
 
