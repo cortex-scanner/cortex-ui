@@ -3,6 +3,7 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import { useEffect, useState } from "react";
 import type { ColumnDef } from "@tanstack/react-table";
 import type { Asset } from "@/types/asset.ts";
 import {
@@ -14,28 +15,69 @@ import {
   TableRow,
 } from "@/components/ui/table.tsx";
 import { LoadingIndicator } from "@/components/LoadingIndicator.tsx";
+import { Checkbox } from "@/components/ui/checkbox.tsx";
 
 export function AssetTable({
   data,
   isLoading,
   onAssetOpen,
+  onRowSelectionChange,
 }: {
   data: Array<Asset>;
   isLoading: boolean;
   onAssetOpen?: (asset: Asset) => void;
+  onRowSelectionChange?: (selectedAssets: Array<Asset>) => void;
 }) {
   const columns: Array<ColumnDef<Asset>> = [
+    {
+      id: "select",
+      header: ({ table }) => (
+        <Checkbox
+          checked={
+            table.getIsAllPageRowsSelected() ||
+            (table.getIsSomePageRowsSelected() && "indeterminate")
+          }
+          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+          aria-label="Select all"
+        />
+      ),
+      cell: ({ row }) => (
+        <Checkbox
+          checked={row.getIsSelected()}
+          onCheckedChange={(value) => row.toggleSelected(!!value)}
+          aria-label="Select row"
+        />
+      ),
+      enableSorting: false,
+      enableHiding: false,
+    },
     {
       accessorKey: "endpoint",
       header: "Endpoint",
     },
   ];
 
+  const [rowSelection, setRowSelection] = useState({});
+
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
+    onRowSelectionChange: setRowSelection,
+    enableRowSelection: true,
+    state: {
+      rowSelection,
+    },
   });
+
+  useEffect(() => {
+    if (onRowSelectionChange) {
+      const selectedRows = table
+        .getSelectedRowModel()
+        .rows.map((row) => row.original);
+      onRowSelectionChange(selectedRows);
+    }
+  }, [rowSelection, table, onRowSelectionChange]);
 
   const onRowDoubleClick = (a: Asset) => {
     if (onAssetOpen) onAssetOpen(a);
