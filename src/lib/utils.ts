@@ -1,5 +1,6 @@
 import { clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { formatDistance } from "date-fns";
 import type { ClassValue } from "clsx";
 
 export function cn(...inputs: Array<ClassValue>) {
@@ -10,4 +11,11 @@ export function formatTimestamp(unixTimestamp: number) {
   const date = new Date(unixTimestamp * 1000);
   // TODO: probably a better way to do this
   return `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")} ${date.getHours().toString().padStart(2, "0")}:${date.getMinutes().toString().padStart(2, "0")}:${date.getSeconds().toString().padStart(2, "0")}`;
+}
+
+export function dateDistance(unixTimestamp: number) {
+  const date = new Date(unixTimestamp * 1000);
+  return formatDistance(date, new Date(), {
+    addSuffix: true,
+  });
 }

@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/table.tsx";
 import { LoadingIndicator } from "@/components/LoadingIndicator.tsx";
 import { Checkbox } from "@/components/ui/checkbox.tsx";
-import { formatTimestamp } from "@/lib/utils.ts";
+import { DateField } from "@/components/DateField.tsx";
 
 export function AssetTable({
   data,
@@ -63,14 +63,12 @@ export function AssetTable({
     {
       accessorKey: "stats.lastDiscovery",
       header: "Last Discovery",
-      cell: ({ row }) => {
-        const lastDiscovery = row.original.stats.lastDiscovery;
-        if (lastDiscovery > 0) {
-          return formatTimestamp(lastDiscovery);
-        } else {
-          return "Never";
-        }
-      },
+      cell: ({ row }) => (
+        <DateField
+          dateUnix={row.original.stats.lastDiscovery}
+          defaultText="Never"
+        />
+      ),
     },
   ];
 

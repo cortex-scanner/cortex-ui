@@ -17,7 +17,7 @@ import {
   CardTitle,
 } from "@/components/ui/card.tsx";
 import { Separator } from "@/components/ui/separator.tsx";
-import { formatTimestamp } from "@/lib/utils.ts";
+import { DateField } from "@/components/DateField.tsx";
 
 export const Route = createFileRoute("/assets/$assetId")({
   component: RouteComponent,
@@ -85,10 +85,10 @@ function RouteComponent() {
                       <TableCell>{discovery.port}</TableCell>
                       <TableCell>{discovery.protocol}</TableCell>
                       <TableCell>
-                        {formatTimestamp(discovery.firstSeen)}
+                        <DateField dateUnix={discovery.firstSeen} />
                       </TableCell>
                       <TableCell>
-                        {formatTimestamp(discovery.lastSeen)}
+                        <DateField dateUnix={discovery.lastSeen} />
                       </TableCell>
                     </TableRow>
                   ))}
