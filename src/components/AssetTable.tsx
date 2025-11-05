@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/table.tsx";
 import { LoadingIndicator } from "@/components/LoadingIndicator.tsx";
 import { Checkbox } from "@/components/ui/checkbox.tsx";
+import { formatTimestamp } from "@/lib/utils.ts";
 
 export function AssetTable({
   data,
@@ -54,6 +55,22 @@ export function AssetTable({
     {
       accessorKey: "endpoint",
       header: "Endpoint",
+    },
+    {
+      accessorKey: "stats.discoveredPortsCount",
+      header: "Open Ports",
+    },
+    {
+      accessorKey: "stats.lastDiscovery",
+      header: "Last Discovery",
+      cell: ({ row }) => {
+        const lastDiscovery = row.original.stats.lastDiscovery;
+        if (lastDiscovery > 0) {
+          return formatTimestamp(lastDiscovery);
+        } else {
+          return "Never";
+        }
+      },
     },
   ];
 

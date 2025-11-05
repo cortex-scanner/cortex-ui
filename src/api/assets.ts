@@ -7,7 +7,7 @@ import {
 } from "@/api/common.ts";
 
 export async function listAssets(): Promise<Array<Asset>> {
-  const response = await fetch(`${API_BASEURL}/assets`);
+  const response = await fetch(`${API_BASEURL}/assets?stats=true`);
   if (!response.ok) {
     const error = await parseErrorResponse(response);
     console.error(error);
@@ -17,7 +17,7 @@ export async function listAssets(): Promise<Array<Asset>> {
 }
 
 export async function getAsset(id: string): Promise<Asset> {
-  const response = await fetch(`${API_BASEURL}/assets/${id}`);
+  const response = await fetch(`${API_BASEURL}/assets/${id}?stats=true`);
   if (!response.ok) {
     const error = await parseErrorResponse(response);
     console.error(error);

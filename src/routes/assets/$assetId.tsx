@@ -17,6 +17,7 @@ import {
   CardTitle,
 } from "@/components/ui/card.tsx";
 import { Separator } from "@/components/ui/separator.tsx";
+import { formatTimestamp } from "@/lib/utils.ts";
 
 export const Route = createFileRoute("/assets/$assetId")({
   component: RouteComponent,
@@ -83,8 +84,12 @@ function RouteComponent() {
                     <TableRow key={`${discovery.port}-${discovery.protocol}`}>
                       <TableCell>{discovery.port}</TableCell>
                       <TableCell>{discovery.protocol}</TableCell>
-                      <TableCell>{discovery.firstSeen}</TableCell>
-                      <TableCell>{discovery.lastSeen}</TableCell>
+                      <TableCell>
+                        {formatTimestamp(discovery.firstSeen)}
+                      </TableCell>
+                      <TableCell>
+                        {formatTimestamp(discovery.lastSeen)}
+                      </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
