@@ -16,8 +16,10 @@ const AuthContext = createContext<AuthState | undefined>(undefined);
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [, setIsLoading] = useState(false);
 
   useEffect(() => {
+    setIsLoading(true);
     console.log("checking auth");
 
     const token = localStorage.getItem(LOCAL_STORAGE_KEY);
@@ -26,6 +28,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setUser(null);
       return;
     }
+
+    // set authenticated right away to avoid login redirect when user request is pending
+    setIsAuthenticated(true);
 
     checkSessionValid()
       .then((u) => {
@@ -36,6 +41,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setUser(null);
         setIsAuthenticated(false);
         localStorage.removeItem(LOCAL_STORAGE_KEY);
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   }, []);
 

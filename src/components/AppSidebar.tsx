@@ -1,4 +1,5 @@
-import { HardDrive, Home } from "lucide-react";
+import { HardDrive, Home, ScanEye } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 
 import {
   Sidebar,
@@ -22,6 +23,11 @@ const items = [
     url: "/assets",
     icon: HardDrive,
   },
+  {
+    title: "Scans",
+    url: "/scan-configs",
+    icon: ScanEye,
+  },
 ];
 
 export function AppSidebar() {
@@ -35,10 +41,10 @@ export function AppSidebar() {
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
-                    <a href={item.url}>
+                    <Link to={item.url}>
                       <item.icon />
                       <span>{item.title}</span>
-                    </a>
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
