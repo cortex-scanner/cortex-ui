@@ -19,7 +19,7 @@ import {
 import { Separator } from "@/components/ui/separator.tsx";
 import { DateField } from "@/components/DateField.tsx";
 
-export const Route = createFileRoute("/assets/$assetId")({
+export const Route = createFileRoute("/_authenticated/assets/$assetId")({
   component: RouteComponent,
 });
 

@@ -55,3 +55,14 @@ export async function parseSingleResponse<T extends object>(
   const parsed = (await r.json()) as APIReply<T>;
   return parsed.data;
 }
+
+export const AUTH_TOKEN_LOCAL_STORAGE_KEY = "auth-token";
+export const HEADER_AUTH = "Authorization";
+
+export function getAuthToken() {
+  const token = localStorage.getItem(AUTH_TOKEN_LOCAL_STORAGE_KEY);
+  if (!token) {
+    throw new Error("auth token not found");
+  }
+  return `Bearer ${token}`;
+}

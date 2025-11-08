@@ -14,7 +14,7 @@ import { AssetTable } from "@/components/AssetTable.tsx";
 import { Separator } from "@/components/ui/separator.tsx";
 import { Toolbar } from "@/components/Toolbar.tsx";
 
-export const Route = createFileRoute("/assets/")({
+export const Route = createFileRoute("/_authenticated/assets/")({
   component: RouteComponent,
 });
 

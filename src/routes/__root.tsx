@@ -5,27 +5,17 @@ import { TanStackDevtools } from "@tanstack/react-devtools";
 import TanStackQueryDevtools from "../integrations/tanstack-query/devtools";
 
 import type { QueryClient } from "@tanstack/react-query";
-import { SidebarProvider } from "@/components/ui/sidebar.tsx";
-import { AppSidebar } from "@/components/AppSidebar.tsx";
-import { Toaster } from "@/components/ui/sonner.tsx";
+import type { AuthState } from "@/context/auth.tsx";
 
 interface MyRouterContext {
   queryClient: QueryClient;
+  auth: AuthState;
 }
 
 export const Route = createRootRouteWithContext<MyRouterContext>()({
   component: () => (
     <>
-      <Toaster />
-      <SidebarProvider>
-        <AppSidebar />
-        <main className="flex-1">
-          <div className="flex p-4 flex-col h-screen">
-            <Outlet />
-          </div>
-        </main>
-      </SidebarProvider>
-
+      <Outlet />
       <TanStackDevtools
         config={{
           position: "bottom-right",

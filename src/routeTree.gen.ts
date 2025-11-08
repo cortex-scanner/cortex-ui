@@ -9,86 +9,137 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as IndexRouteImport } from './routes/index'
-import { Route as AssetsIndexRouteImport } from './routes/assets/index'
-import { Route as AssetsAssetIdRouteImport } from './routes/assets/$assetId'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
+import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
+import { Route as AuthenticatedAssetsIndexRouteImport } from './routes/_authenticated/assets/index'
+import { Route as AuthenticatedAssetsAssetIdRouteImport } from './routes/_authenticated/assets/$assetId'
 
-const IndexRoute = IndexRouteImport.update({
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedRoute = AuthenticatedRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedIndexRoute = AuthenticatedIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AuthenticatedRoute,
 } as any)
-const AssetsIndexRoute = AssetsIndexRouteImport.update({
-  id: '/assets/',
-  path: '/assets/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AssetsAssetIdRoute = AssetsAssetIdRouteImport.update({
-  id: '/assets/$assetId',
-  path: '/assets/$assetId',
-  getParentRoute: () => rootRouteImport,
-} as any)
+const AuthenticatedAssetsIndexRoute =
+  AuthenticatedAssetsIndexRouteImport.update({
+    id: '/assets/',
+    path: '/assets/',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedAssetsAssetIdRoute =
+  AuthenticatedAssetsAssetIdRouteImport.update({
+    id: '/assets/$assetId',
+    path: '/assets/$assetId',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/assets/$assetId': typeof AssetsAssetIdRoute
-  '/assets': typeof AssetsIndexRoute
+  '/login': typeof LoginRoute
+  '/': typeof AuthenticatedIndexRoute
+  '/assets/$assetId': typeof AuthenticatedAssetsAssetIdRoute
+  '/assets': typeof AuthenticatedAssetsIndexRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/assets/$assetId': typeof AssetsAssetIdRoute
-  '/assets': typeof AssetsIndexRoute
+  '/login': typeof LoginRoute
+  '/': typeof AuthenticatedIndexRoute
+  '/assets/$assetId': typeof AuthenticatedAssetsAssetIdRoute
+  '/assets': typeof AuthenticatedAssetsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
-  '/assets/$assetId': typeof AssetsAssetIdRoute
-  '/assets/': typeof AssetsIndexRoute
+  '/_authenticated': typeof AuthenticatedRouteWithChildren
+  '/login': typeof LoginRoute
+  '/_authenticated/': typeof AuthenticatedIndexRoute
+  '/_authenticated/assets/$assetId': typeof AuthenticatedAssetsAssetIdRoute
+  '/_authenticated/assets/': typeof AuthenticatedAssetsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/assets/$assetId' | '/assets'
+  fullPaths: '/login' | '/' | '/assets/$assetId' | '/assets'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/assets/$assetId' | '/assets'
-  id: '__root__' | '/' | '/assets/$assetId' | '/assets/'
+  to: '/login' | '/' | '/assets/$assetId' | '/assets'
+  id:
+    | '__root__'
+    | '/_authenticated'
+    | '/login'
+    | '/_authenticated/'
+    | '/_authenticated/assets/$assetId'
+    | '/_authenticated/assets/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  AssetsAssetIdRoute: typeof AssetsAssetIdRoute
-  AssetsIndexRoute: typeof AssetsIndexRoute
+  AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
+  LoginRoute: typeof LoginRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof AuthenticatedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/': {
+      id: '/_authenticated/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedIndexRouteImport
+      parentRoute: typeof AuthenticatedRoute
     }
-    '/assets/': {
-      id: '/assets/'
+    '/_authenticated/assets/': {
+      id: '/_authenticated/assets/'
       path: '/assets'
       fullPath: '/assets'
-      preLoaderRoute: typeof AssetsIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedAssetsIndexRouteImport
+      parentRoute: typeof AuthenticatedRoute
     }
-    '/assets/$assetId': {
-      id: '/assets/$assetId'
+    '/_authenticated/assets/$assetId': {
+      id: '/_authenticated/assets/$assetId'
       path: '/assets/$assetId'
       fullPath: '/assets/$assetId'
-      preLoaderRoute: typeof AssetsAssetIdRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedAssetsAssetIdRouteImport
+      parentRoute: typeof AuthenticatedRoute
     }
   }
 }
 
+interface AuthenticatedRouteChildren {
+  AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
+  AuthenticatedAssetsAssetIdRoute: typeof AuthenticatedAssetsAssetIdRoute
+  AuthenticatedAssetsIndexRoute: typeof AuthenticatedAssetsIndexRoute
+}
+
+const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
+  AuthenticatedIndexRoute: AuthenticatedIndexRoute,
+  AuthenticatedAssetsAssetIdRoute: AuthenticatedAssetsAssetIdRoute,
+  AuthenticatedAssetsIndexRoute: AuthenticatedAssetsIndexRoute,
+}
+
+const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
+  AuthenticatedRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
-  AssetsAssetIdRoute: AssetsAssetIdRoute,
-  AssetsIndexRoute: AssetsIndexRoute,
+  AuthenticatedRoute: AuthenticatedRouteWithChildren,
+  LoginRoute: LoginRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
