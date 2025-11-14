@@ -8,11 +8,15 @@ import type {
   AssetDialogRef,
   AssetDialogResult,
 } from "@/components/AssetDialog.tsx";
+import type { ScanSelectionDialogRef } from "@/components/ScanSelectionDialog.tsx";
+import type { ScanConfig } from "@/types/scan.ts";
 import AssetDialog from "@/components/AssetDialog.tsx";
 import { createAsset, deleteAsset, listAssets } from "@/api/assets.ts";
 import { AssetTable } from "@/components/AssetTable.tsx";
 import { Separator } from "@/components/ui/separator.tsx";
 import { Toolbar } from "@/components/Toolbar.tsx";
+import ScanSelectionDialog from "@/components/ScanSelectionDialog.tsx";
+import { runScan } from "@/api/scans.ts";
 
 export const Route = createFileRoute("/_authenticated/assets/")({
   component: RouteComponent,
@@ -20,8 +24,9 @@ export const Route = createFileRoute("/_authenticated/assets/")({
 
 function RouteComponent() {
   const assetDialogRef = useRef<AssetDialogRef>(null);
+  const scanSelectionDialogRef = useRef<ScanSelectionDialogRef>(null);
 
-  const query = useQuery({
+  const assetQuery = useQuery({
     queryKey: ["assets"],
     queryFn: listAssets,
     initialData: [],
@@ -32,7 +37,7 @@ function RouteComponent() {
       return createAsset(endpoint);
     },
     onSuccess: () => {
-      query.refetch();
+      assetQuery.refetch();
       assetDialogRef.current?.closeDialog();
 
       toast.success("Asset created", {
@@ -51,13 +56,29 @@ function RouteComponent() {
       return deleteAsset(assetId);
     },
     onSuccess: (a) => {
-      query.refetch();
+      assetQuery.refetch();
       toast.success("Asset deleted", {
         description: `${a.endpoint} has been deleted successfully.`,
       });
     },
     onError: (e) => {
       toast.error("Failed to delete asset", {
+        description: e.message,
+      });
+    },
+  });
+
+  const queueScanMutation = useMutation({
+    mutationFn: (scanConfig: ScanConfig) => {
+      return runScan(scanConfig, selectedAssets);
+    },
+    onSuccess: (exec) => {
+      toast.success("Running scan", {
+        description: `Running scan on ${exec.assets.length} assets.`,
+      });
+    },
+    onError: (e) => {
+      toast.error("Failed to run scan", {
         description: e.message,
       });
     },
@@ -83,6 +104,15 @@ function RouteComponent() {
         }
       },
     },
+    {
+      label: "Run Scan",
+      icon: "play",
+      onClick: () => {
+        if (selectedAssets.length > 0) {
+          scanSelectionDialogRef.current?.openDialog();
+        }
+      },
+    },
   ];
 
   const toolbarActionsRight: Array<ToolbarItem> = [
@@ -90,7 +120,7 @@ function RouteComponent() {
       label: "Reload",
       icon: "refresh-cw",
       onClick: () => {
-        query.refetch();
+        assetQuery.refetch();
       },
     },
   ];
@@ -110,14 +140,18 @@ function RouteComponent() {
     createMutation.mutate(asset.endpoint);
   };
 
+  const onScanConfigSelected = (scanConfig: ScanConfig) => {
+    queueScanMutation.mutate(scanConfig);
+  };
+
   return (
     <div className="w-full flex flex-col gap-4">
       <span className="ml-2 text-2xl">Assets</span>
       <Separator />
       <Toolbar itemsStart={toolbarActionsLeft} itemsEnd={toolbarActionsRight} />
       <AssetTable
-        data={query.data}
-        isLoading={query.isLoading}
+        data={assetQuery.data}
+        isLoading={assetQuery.isLoading}
         onAssetOpen={onAssetOpen}
         onRowSelectionChange={onAssetsSelected}
       />
@@ -125,6 +159,10 @@ function RouteComponent() {
         ref={assetDialogRef}
         onConfirm={onAssetDialogSubmit}
         isLoading={createMutation.isPending}
+      />
+      <ScanSelectionDialog
+        ref={scanSelectionDialogRef}
+        onConfirm={onScanConfigSelected}
       />
     </div>
   );
