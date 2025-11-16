@@ -137,7 +137,7 @@ export function ScanConfigTable({
           ) : (
             <TableRow>
               <TableCell colSpan={columns.length} className="h-24 text-center">
-                No scans configurations
+                No scan configurations
               </TableCell>
             </TableRow>
           )}

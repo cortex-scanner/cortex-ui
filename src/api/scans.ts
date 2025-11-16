@@ -26,6 +26,23 @@ export async function listScanConfigs(): Promise<Array<ScanConfig>> {
   return parseArrayResponse<ScanConfig>(response);
 }
 
+export async function listScanExecutions(): Promise<Array<ScanExecution>> {
+  const response = await fetch(`${API_BASEURL}/scans`, {
+    method: "GET",
+    headers: {
+      [HEADER_AUTH]: getAuthToken(),
+    },
+  });
+
+  if (!response.ok) {
+    const error = await parseErrorResponse(response);
+    console.error(error);
+    throw error;
+  }
+
+  return parseArrayResponse<ScanExecution>(response);
+}
+
 export async function runScan(
   scanConfig: ScanConfig,
   assets: Array<Asset>

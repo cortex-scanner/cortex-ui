@@ -15,7 +15,7 @@ export function AssetHistoryView({
       case "updated":
         return "pencil";
       case "scan_finished":
-        return "scan-eye";
+        return "search";
       default:
         return "chevron-right";
     }

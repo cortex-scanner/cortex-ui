@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
+import { Route as AuthenticatedScansIndexRouteImport } from './routes/_authenticated/scans/index'
 import { Route as AuthenticatedScanConfigsIndexRouteImport } from './routes/_authenticated/scan-configs/index'
 import { Route as AuthenticatedAssetsIndexRouteImport } from './routes/_authenticated/assets/index'
 import { Route as AuthenticatedAssetsAssetIdRouteImport } from './routes/_authenticated/assets/$assetId'
@@ -28,6 +29,11 @@ const AuthenticatedRoute = AuthenticatedRouteImport.update({
 const AuthenticatedIndexRoute = AuthenticatedIndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedScansIndexRoute = AuthenticatedScansIndexRouteImport.update({
+  id: '/scans/',
+  path: '/scans/',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
 const AuthenticatedScanConfigsIndexRoute =
@@ -55,6 +61,7 @@ export interface FileRoutesByFullPath {
   '/assets/$assetId': typeof AuthenticatedAssetsAssetIdRoute
   '/assets': typeof AuthenticatedAssetsIndexRoute
   '/scan-configs': typeof AuthenticatedScanConfigsIndexRoute
+  '/scans': typeof AuthenticatedScansIndexRoute
 }
 export interface FileRoutesByTo {
   '/login': typeof LoginRoute
@@ -62,6 +69,7 @@ export interface FileRoutesByTo {
   '/assets/$assetId': typeof AuthenticatedAssetsAssetIdRoute
   '/assets': typeof AuthenticatedAssetsIndexRoute
   '/scan-configs': typeof AuthenticatedScanConfigsIndexRoute
+  '/scans': typeof AuthenticatedScansIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -71,12 +79,25 @@ export interface FileRoutesById {
   '/_authenticated/assets/$assetId': typeof AuthenticatedAssetsAssetIdRoute
   '/_authenticated/assets/': typeof AuthenticatedAssetsIndexRoute
   '/_authenticated/scan-configs/': typeof AuthenticatedScanConfigsIndexRoute
+  '/_authenticated/scans/': typeof AuthenticatedScansIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/login' | '/' | '/assets/$assetId' | '/assets' | '/scan-configs'
+  fullPaths:
+    | '/login'
+    | '/'
+    | '/assets/$assetId'
+    | '/assets'
+    | '/scan-configs'
+    | '/scans'
   fileRoutesByTo: FileRoutesByTo
-  to: '/login' | '/' | '/assets/$assetId' | '/assets' | '/scan-configs'
+  to:
+    | '/login'
+    | '/'
+    | '/assets/$assetId'
+    | '/assets'
+    | '/scan-configs'
+    | '/scans'
   id:
     | '__root__'
     | '/_authenticated'
@@ -85,6 +106,7 @@ export interface FileRouteTypes {
     | '/_authenticated/assets/$assetId'
     | '/_authenticated/assets/'
     | '/_authenticated/scan-configs/'
+    | '/_authenticated/scans/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -113,6 +135,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof AuthenticatedIndexRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/scans/': {
+      id: '/_authenticated/scans/'
+      path: '/scans'
+      fullPath: '/scans'
+      preLoaderRoute: typeof AuthenticatedScansIndexRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
     '/_authenticated/scan-configs/': {
@@ -144,6 +173,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedAssetsAssetIdRoute: typeof AuthenticatedAssetsAssetIdRoute
   AuthenticatedAssetsIndexRoute: typeof AuthenticatedAssetsIndexRoute
   AuthenticatedScanConfigsIndexRoute: typeof AuthenticatedScanConfigsIndexRoute
+  AuthenticatedScansIndexRoute: typeof AuthenticatedScansIndexRoute
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
@@ -151,6 +181,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedAssetsAssetIdRoute: AuthenticatedAssetsAssetIdRoute,
   AuthenticatedAssetsIndexRoute: AuthenticatedAssetsIndexRoute,
   AuthenticatedScanConfigsIndexRoute: AuthenticatedScanConfigsIndexRoute,
+  AuthenticatedScansIndexRoute: AuthenticatedScansIndexRoute,
 }
 
 const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
