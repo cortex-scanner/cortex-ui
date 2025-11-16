@@ -19,3 +19,12 @@ export interface AssetDiscoveryResult {
   // unix timestamp
   lastSeen: number;
 }
+
+export interface AssetHistoryEntry {
+  id: string;
+  assetId: string;
+  timestamp: number;
+  userId: string;
+  eventType: string;
+  eventData: object | null;
+}

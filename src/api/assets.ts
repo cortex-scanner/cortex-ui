@@ -1,4 +1,8 @@
-import type { Asset, AssetDiscoveryResult } from "@/types/asset.ts";
+import type {
+  Asset,
+  AssetDiscoveryResult,
+  AssetHistoryEntry,
+} from "@/types/asset.ts";
 import {
   API_BASEURL,
   HEADER_AUTH,
@@ -58,6 +62,24 @@ export async function getAssetDiscoveries(
     throw error;
   }
   return parseArrayResponse<AssetDiscoveryResult>(response);
+}
+
+export async function getAssetHistory(
+  assetId: string
+): Promise<Array<AssetHistoryEntry>> {
+  const response = await fetch(`${API_BASEURL}/assets/${assetId}/history`, {
+    method: "GET",
+    headers: {
+      [HEADER_AUTH]: getAuthToken(),
+    },
+  });
+
+  if (!response.ok) {
+    const error = await parseErrorResponse(response);
+    console.error(error);
+    throw error;
+  }
+  return parseArrayResponse<AssetHistoryEntry>(response);
 }
 
 export async function createAsset(endpoint: string): Promise<Asset> {

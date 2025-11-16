@@ -1,23 +1,20 @@
 import { createFileRoute, useParams } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { getAsset, getAssetDiscoveries } from "@/api/assets.ts";
+import {
+  getAsset,
+  getAssetDiscoveries,
+  getAssetHistory,
+} from "@/api/assets.ts";
 import { LoadingIndicator } from "@/components/LoadingIndicator.tsx";
+import { AssetDetailView } from "@/components/AssetDetailView.tsx";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table.tsx";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card.tsx";
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/components/ui/tabs.tsx";
 import { Separator } from "@/components/ui/separator.tsx";
-import { DateField } from "@/components/DateField.tsx";
+import { AssetHistoryView } from "@/components/AssetHistoryView.tsx";
 
 export const Route = createFileRoute("/_authenticated/assets/$assetId")({
   component: RouteComponent,
@@ -34,68 +31,36 @@ function RouteComponent() {
     queryKey: ["asset", assetId, "discovery"],
     queryFn: ({ queryKey }) => getAssetDiscoveries(queryKey[1] as string),
   });
+  const historyQuery = useQuery({
+    queryKey: ["asset", assetId, "history"],
+    queryFn: ({ queryKey }) => getAssetHistory(queryKey[1] as string),
+  });
 
   return (
     <div>
-      {assetQuery.isLoading || discoveryQuery.isLoading ? (
+      {assetQuery.isLoading ||
+      discoveryQuery.isLoading ||
+      historyQuery.isLoading ? (
         <LoadingIndicator text="Loading asset..." />
       ) : (
         <div>
           <span className="text-2xl ml-2">{assetQuery.data?.endpoint}</span>
           <Separator className="my-4" />
-          <Card className="mb-4">
-            <CardHeader>
-              <CardTitle>Asset Details</CardTitle>
-            </CardHeader>
-
-            <CardContent>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>ID</TableHead>
-                    <TableHead>Endpoint</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  <TableRow>
-                    <TableCell>{assetQuery.data?.id}</TableCell>
-                    <TableCell>{assetQuery.data?.endpoint}</TableCell>
-                  </TableRow>
-                </TableBody>
-              </Table>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader>
-              <CardTitle>Port Discovery</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Port</TableHead>
-                    <TableHead>Protocol</TableHead>
-                    <TableHead>First Seen</TableHead>
-                    <TableHead>Last Seen</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {discoveryQuery.data?.map((discovery) => (
-                    <TableRow key={`${discovery.port}-${discovery.protocol}`}>
-                      <TableCell>{discovery.port}</TableCell>
-                      <TableCell>{discovery.protocol}</TableCell>
-                      <TableCell>
-                        <DateField dateUnix={discovery.firstSeen} />
-                      </TableCell>
-                      <TableCell>
-                        <DateField dateUnix={discovery.lastSeen} />
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </CardContent>
-          </Card>
+          <Tabs defaultValue="details">
+            <TabsList>
+              <TabsTrigger value="details">Details</TabsTrigger>
+              <TabsTrigger value="history">History</TabsTrigger>
+            </TabsList>
+            <TabsContent value="details">
+              <AssetDetailView
+                asset={assetQuery.data!}
+                discoveryResults={discoveryQuery.data!}
+              />
+            </TabsContent>
+            <TabsContent value="history">
+              <AssetHistoryView history={historyQuery.data!} />
+            </TabsContent>
+          </Tabs>
         </div>
       )}
     </div>
