@@ -1,4 +1,8 @@
-import type { Asset, AssetDiscoveryResult } from "@/types/asset.ts";
+import type {
+  Asset,
+  AssetFinding,
+  AssetPortFindingData,
+} from "@/types/asset.ts";
 import {
   Card,
   CardContent,
@@ -20,7 +24,7 @@ export function AssetDetailView({
   discoveryResults,
 }: {
   asset: Asset;
-  discoveryResults: Array<AssetDiscoveryResult>;
+  discoveryResults: Array<AssetFinding<AssetPortFindingData>>;
 }) {
   return (
     <div>
@@ -62,9 +66,11 @@ export function AssetDetailView({
             </TableHeader>
             <TableBody>
               {discoveryResults.map((discovery) => (
-                <TableRow key={`${discovery.port}-${discovery.protocol}`}>
-                  <TableCell>{discovery.port}</TableCell>
-                  <TableCell>{discovery.protocol}</TableCell>
+                <TableRow
+                  key={`${discovery.data.port}-${discovery.data.protocol}`}
+                >
+                  <TableCell>{discovery.data.port}</TableCell>
+                  <TableCell>{discovery.data.protocol}</TableCell>
                   <TableCell>
                     <DateField dateUnix={discovery.firstSeen} />
                   </TableCell>

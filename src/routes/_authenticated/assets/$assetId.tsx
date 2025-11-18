@@ -1,10 +1,6 @@
 import { createFileRoute, useParams } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import {
-  getAsset,
-  getAssetDiscoveries,
-  getAssetHistory,
-} from "@/api/assets.ts";
+import { getAsset, getAssetFindings, getAssetHistory } from "@/api/assets.ts";
 import { LoadingIndicator } from "@/components/LoadingIndicator.tsx";
 import { AssetDetailView } from "@/components/AssetDetailView.tsx";
 import {
@@ -15,6 +11,7 @@ import {
 } from "@/components/ui/tabs.tsx";
 import { Separator } from "@/components/ui/separator.tsx";
 import { AssetHistoryView } from "@/components/AssetHistoryView.tsx";
+import { getPortFindings } from "@/types/asset.ts";
 
 export const Route = createFileRoute("/_authenticated/assets/$assetId")({
   component: RouteComponent,
@@ -29,7 +26,7 @@ function RouteComponent() {
   });
   const discoveryQuery = useQuery({
     queryKey: ["asset", assetId, "discovery"],
-    queryFn: ({ queryKey }) => getAssetDiscoveries(queryKey[1] as string),
+    queryFn: ({ queryKey }) => getAssetFindings(queryKey[1] as string),
   });
   const historyQuery = useQuery({
     queryKey: ["asset", assetId, "history"],
@@ -54,7 +51,7 @@ function RouteComponent() {
             <TabsContent value="details">
               <AssetDetailView
                 asset={assetQuery.data!}
-                discoveryResults={discoveryQuery.data!}
+                discoveryResults={getPortFindings(discoveryQuery.data!)}
               />
             </TabsContent>
             <TabsContent value="history">

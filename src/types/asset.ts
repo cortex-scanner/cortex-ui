@@ -9,15 +9,29 @@ export interface Asset {
 }
 
 export type AssetDiscoveryProtocol = "tcp" | "udp";
+export type AssetFindingType = "port" | "vulnerability";
 
-export interface AssetDiscoveryResult {
+export interface AssetFinding<T extends object> {
+  id: string;
   assetId: string;
-  port: number;
-  protocol: AssetDiscoveryProtocol;
+  type: AssetFindingType;
   // unix timestamp
   firstSeen: number;
   // unix timestamp
   lastSeen: number;
+  data: T;
+}
+
+export interface AssetPortFindingData {
+  port: number;
+  protocol: AssetDiscoveryProtocol;
+}
+
+export function getPortFindings(
+  findings: Array<AssetFinding<any>>
+): Array<AssetFinding<AssetPortFindingData>> {
+  const portFindings = findings.filter((f) => f.type === "port");
+  return portFindings as Array<AssetFinding<AssetPortFindingData>>;
 }
 
 export interface AssetHistoryEntry {
