@@ -24,7 +24,7 @@ const items = [
     icon: HardDrive,
   },
   {
-    title: "Scans",
+    title: "Scan History",
     url: "/scans",
     icon: Search,
   },
