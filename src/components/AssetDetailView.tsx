@@ -26,6 +26,25 @@ export function AssetDetailView({
   asset: Asset;
   discoveryResults: Array<AssetFinding<AssetPortFindingData>>;
 }) {
+  const latestFindings = (
+    all: Array<AssetFinding<AssetPortFindingData>>
+  ): Array<AssetFinding<AssetPortFindingData>> => {
+    const findings = new Map<string, AssetFinding<AssetPortFindingData>>();
+
+    for (const f of all) {
+      const current = findings.get(f.findingHash);
+      if (current) {
+        if (current.createdAt < f.createdAt) {
+          findings.set(f.findingHash, f);
+        }
+      } else {
+        findings.set(f.findingHash, f);
+      }
+    }
+
+    return Array.from(findings.values());
+  };
+
   return (
     <div>
       <Card className="mb-4">
@@ -60,22 +79,18 @@ export function AssetDetailView({
               <TableRow>
                 <TableHead>Port</TableHead>
                 <TableHead>Protocol</TableHead>
-                <TableHead>First Seen</TableHead>
                 <TableHead>Last Seen</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {discoveryResults.map((discovery) => (
+              {latestFindings(discoveryResults).map((discovery) => (
                 <TableRow
                   key={`${discovery.data.port}-${discovery.data.protocol}`}
                 >
                   <TableCell>{discovery.data.port}</TableCell>
                   <TableCell>{discovery.data.protocol}</TableCell>
                   <TableCell>
-                    <DateField dateUnix={discovery.firstSeen} />
-                  </TableCell>
-                  <TableCell>
-                    <DateField dateUnix={discovery.lastSeen} />
+                    <DateField dateUnix={discovery.createdAt} />
                   </TableCell>
                 </TableRow>
               ))}

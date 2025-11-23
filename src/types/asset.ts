@@ -16,9 +16,9 @@ export interface AssetFinding<T extends object> {
   assetId: string;
   type: AssetFindingType;
   // unix timestamp
-  firstSeen: number;
-  // unix timestamp
-  lastSeen: number;
+  createdAt: number;
+  findingHash: string;
+  agentId: string;
   data: T;
 }
 
