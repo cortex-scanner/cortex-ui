@@ -15,6 +15,7 @@ import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/
 import { Route as AuthenticatedScansIndexRouteImport } from './routes/_authenticated/scans/index'
 import { Route as AuthenticatedScanConfigsIndexRouteImport } from './routes/_authenticated/scan-configs/index'
 import { Route as AuthenticatedAssetsIndexRouteImport } from './routes/_authenticated/assets/index'
+import { Route as AuthenticatedAgentsIndexRouteImport } from './routes/_authenticated/agents/index'
 import { Route as AuthenticatedAssetsAssetIdRouteImport } from './routes/_authenticated/assets/$assetId'
 
 const LoginRoute = LoginRouteImport.update({
@@ -48,6 +49,12 @@ const AuthenticatedAssetsIndexRoute =
     path: '/assets/',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
+const AuthenticatedAgentsIndexRoute =
+  AuthenticatedAgentsIndexRouteImport.update({
+    id: '/agents/',
+    path: '/agents/',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 const AuthenticatedAssetsAssetIdRoute =
   AuthenticatedAssetsAssetIdRouteImport.update({
     id: '/assets/$assetId',
@@ -59,6 +66,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/': typeof AuthenticatedIndexRoute
   '/assets/$assetId': typeof AuthenticatedAssetsAssetIdRoute
+  '/agents': typeof AuthenticatedAgentsIndexRoute
   '/assets': typeof AuthenticatedAssetsIndexRoute
   '/scan-configs': typeof AuthenticatedScanConfigsIndexRoute
   '/scans': typeof AuthenticatedScansIndexRoute
@@ -67,6 +75,7 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/': typeof AuthenticatedIndexRoute
   '/assets/$assetId': typeof AuthenticatedAssetsAssetIdRoute
+  '/agents': typeof AuthenticatedAgentsIndexRoute
   '/assets': typeof AuthenticatedAssetsIndexRoute
   '/scan-configs': typeof AuthenticatedScanConfigsIndexRoute
   '/scans': typeof AuthenticatedScansIndexRoute
@@ -77,6 +86,7 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
   '/_authenticated/assets/$assetId': typeof AuthenticatedAssetsAssetIdRoute
+  '/_authenticated/agents/': typeof AuthenticatedAgentsIndexRoute
   '/_authenticated/assets/': typeof AuthenticatedAssetsIndexRoute
   '/_authenticated/scan-configs/': typeof AuthenticatedScanConfigsIndexRoute
   '/_authenticated/scans/': typeof AuthenticatedScansIndexRoute
@@ -87,6 +97,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/'
     | '/assets/$assetId'
+    | '/agents'
     | '/assets'
     | '/scan-configs'
     | '/scans'
@@ -95,6 +106,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/'
     | '/assets/$assetId'
+    | '/agents'
     | '/assets'
     | '/scan-configs'
     | '/scans'
@@ -104,6 +116,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/_authenticated/'
     | '/_authenticated/assets/$assetId'
+    | '/_authenticated/agents/'
     | '/_authenticated/assets/'
     | '/_authenticated/scan-configs/'
     | '/_authenticated/scans/'
@@ -158,6 +171,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAssetsIndexRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/agents/': {
+      id: '/_authenticated/agents/'
+      path: '/agents'
+      fullPath: '/agents'
+      preLoaderRoute: typeof AuthenticatedAgentsIndexRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/assets/$assetId': {
       id: '/_authenticated/assets/$assetId'
       path: '/assets/$assetId'
@@ -171,6 +191,7 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedRouteChildren {
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
   AuthenticatedAssetsAssetIdRoute: typeof AuthenticatedAssetsAssetIdRoute
+  AuthenticatedAgentsIndexRoute: typeof AuthenticatedAgentsIndexRoute
   AuthenticatedAssetsIndexRoute: typeof AuthenticatedAssetsIndexRoute
   AuthenticatedScanConfigsIndexRoute: typeof AuthenticatedScanConfigsIndexRoute
   AuthenticatedScansIndexRoute: typeof AuthenticatedScansIndexRoute
@@ -179,6 +200,7 @@ interface AuthenticatedRouteChildren {
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
   AuthenticatedAssetsAssetIdRoute: AuthenticatedAssetsAssetIdRoute,
+  AuthenticatedAgentsIndexRoute: AuthenticatedAgentsIndexRoute,
   AuthenticatedAssetsIndexRoute: AuthenticatedAssetsIndexRoute,
   AuthenticatedScanConfigsIndexRoute: AuthenticatedScanConfigsIndexRoute,
   AuthenticatedScansIndexRoute: AuthenticatedScansIndexRoute,

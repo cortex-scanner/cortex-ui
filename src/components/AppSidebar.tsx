@@ -1,4 +1,4 @@
-import { HardDrive, Home, Search, SearchCode } from "lucide-react";
+import { Bot, HardDrive, Home, Search, SearchCode } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 
 import {
@@ -32,6 +32,11 @@ const items = [
     title: "Scan Configuration",
     url: "/scan-configs",
     icon: SearchCode,
+  },
+  {
+    title: "Agents",
+    url: "/agents",
+    icon: Bot,
   },
 ];
 
