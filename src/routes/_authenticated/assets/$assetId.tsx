@@ -1,4 +1,8 @@
-import { createFileRoute, useParams } from "@tanstack/react-router";
+import {
+  createFileRoute,
+  useNavigate,
+  useParams,
+} from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { getAsset, getAssetFindings, getAssetHistory } from "@/api/assets.ts";
 import { LoadingIndicator } from "@/components/LoadingIndicator.tsx";
@@ -20,6 +24,7 @@ export const Route = createFileRoute("/_authenticated/assets/$assetId")({
 
 function RouteComponent() {
   const { assetId } = useParams({ strict: false });
+  const navigate = useNavigate();
 
   const assetQuery = useQuery({
     queryKey: ["asset", assetId],
@@ -60,6 +65,12 @@ function RouteComponent() {
               <VulnerabilityTable
                 data={getVulnerabilityFindings(discoveryQuery.data!, true)}
                 isLoading={false}
+                onVulnerabilityOpen={(finding) =>
+                  navigate({
+                    to: "/findings/$findingId",
+                    params: { findingId: finding.id },
+                  })
+                }
               />
             </TabsContent>
             <TabsContent value="history">

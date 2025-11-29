@@ -5,7 +5,6 @@
 - **Install**: `npm install`
 - **Dev**: `npm run dev`
 - **Build**: `npm run build` (runs `vite build` + `tsc`)
-- **Linting and Format**: run `npm run check` to fix both.
 
 ## Code Style & Conventions
 
