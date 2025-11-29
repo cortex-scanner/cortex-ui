@@ -11,7 +11,8 @@ import {
 } from "@/components/ui/tabs.tsx";
 import { Separator } from "@/components/ui/separator.tsx";
 import { AssetHistoryView } from "@/components/AssetHistoryView.tsx";
-import { getPortFindings } from "@/types/asset.ts";
+import { getPortFindings, getVulnerabilityFindings } from "@/types/asset.ts";
+import { VulnerabilityTable } from "@/components/VulnerabilityTable.tsx";
 
 export const Route = createFileRoute("/_authenticated/assets/$assetId")({
   component: RouteComponent,
@@ -46,12 +47,19 @@ function RouteComponent() {
           <Tabs defaultValue="details">
             <TabsList>
               <TabsTrigger value="details">Details</TabsTrigger>
+              <TabsTrigger value="vulnerabilities">Vulnerabilities</TabsTrigger>
               <TabsTrigger value="history">History</TabsTrigger>
             </TabsList>
             <TabsContent value="details">
               <AssetDetailView
                 asset={assetQuery.data!}
                 discoveryResults={getPortFindings(discoveryQuery.data!)}
+              />
+            </TabsContent>
+            <TabsContent value="vulnerabilities">
+              <VulnerabilityTable
+                data={getVulnerabilityFindings(discoveryQuery.data!, true)}
+                isLoading={false}
               />
             </TabsContent>
             <TabsContent value="history">
