@@ -5,6 +5,7 @@ export interface Asset {
     discoveredPortsCount: number;
     // unix timestamp
     lastDiscovery: number;
+    highestVulnerabilitySeverity: VulnerabilitySeverity | null;
   };
 }
 

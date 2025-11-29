@@ -17,6 +17,7 @@ import {
 import { LoadingIndicator } from "@/components/LoadingIndicator.tsx";
 import { Checkbox } from "@/components/ui/checkbox.tsx";
 import { DateField } from "@/components/DateField.tsx";
+import { SeverityBadge } from "@/components/SeverityBadge.tsx";
 
 export function AssetTable({
   data,
@@ -59,6 +60,18 @@ export function AssetTable({
     {
       accessorKey: "stats.discoveredPortsCount",
       header: "Open Ports",
+    },
+    {
+      accessorKey: "stats.highestVulnerabilitySeverity",
+      header: "Vulnerability",
+      cell: ({ row }) => {
+        const severity = row.original.stats.highestVulnerabilitySeverity;
+        return severity ? (
+          <SeverityBadge severity={severity} />
+        ) : (
+          <span>-</span>
+        );
+      },
     },
     {
       accessorKey: "stats.lastDiscovery",
